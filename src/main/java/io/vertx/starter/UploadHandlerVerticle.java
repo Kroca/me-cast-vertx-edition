@@ -2,10 +2,12 @@ package io.vertx.starter;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.file.AsyncFile;
 import io.vertx.core.file.OpenOptions;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -35,10 +37,17 @@ public class UploadHandlerVerticle extends AbstractVerticle {
 
 
         List<String> files = vertx.fileSystem().readDirBlocking("src/main/uploads");
-        System.out.println(files.size());
-        System.out.println(files.get(0));
+        //todo сделать нормально =)
+        String names = files.stream()
+                .map(val -> {
+                    String[] vals = val.split("/");
+                    return vals[vals.length - 1];
+                })
+                .map(val -> "<li><a href=\"/download/?name=" + val + "\">" + val + "</a></li>")
+                .reduce((c, n) -> c + n)
+                .orElse("");
+        System.out.println(names);
 
-        String names = files.stream().reduce((c, n) -> c + "<div>" + n + "</div>").orElse("");
 
         router.route("/").handler(routingContext -> {
             routingContext.response().putHeader("content-type", "text/html").end(
@@ -61,14 +70,17 @@ public class UploadHandlerVerticle extends AbstractVerticle {
             ctx.response().setChunked(true);
 
             for (FileUpload f : ctx.fileUploads()) {
-
-                System.out.println(String.format("filename %s uuid %s format %s content-type %s",
-                        f.fileName(), f.uploadedFileName(), f.contentTransferEncoding(), f.contentType()));
                 ctx.response().write("Filename: " + f.fileName());
                 ctx.response().write("\n");
                 ctx.response().write("Size: " + f.size());
+                JsonObject uploadedFile = new JsonObject();
+                uploadedFile.put("title", f.fileName());
+                uploadedFile.put("path", f.uploadedFileName());
+                //todo add batch handling
+                DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("method", "save");
+                //todo add response handler
+                vertx.eventBus().send(DB_MEDIA, uploadedFile, deliveryOptions);
             }
-//            vertx.eventBus().send(DB_MEDIA,)
             ctx.response().end();
         });
 
