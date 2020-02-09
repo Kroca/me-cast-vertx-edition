@@ -15,15 +15,15 @@ import static io.vertx.starter.util.EBPaths.DB_MEDIA;
 public class DbVerticle extends AbstractVerticle {
 
     private Logger logger = LoggerFactory.getLogger(DbVerticle.class);
-    private String createMediaTable = "CREATE TABLE IF NOT EXISTS MEDIA(ID integer identity primary key, title varchar(255), uuid varchar (255) unique );";
+    private String createMediaTable = "CREATE TABLE IF NOT EXISTS MEDIA(ID integer identity primary key, title varchar(255), file_path varchar (512) unique );";
     private String getAllMedia = "SELECT * from MEDIA";
-    private String createMedia = "insert into MEDIA(id,title,uuid) values (null,?,?)";
+    private String createMedia = "insert into MEDIA(id,title,file_path) values (null,?,?)";
     private JDBCClient jdbcClient;
 
     @Override
     public void start(Promise promise) {
         jdbcClient = JDBCClient.createShared(vertx, new JsonObject()
-                .put("url", "jdbc:hsqldb:file:db/wiki")
+                .put("url", "jdbc:hsqldb:mem:db/wiki")
                 .put("driver_class", "org.hsqldb.jdbcDriver")
                 .put("max_pool_size", 30));
         System.out.println(config().getString("test", "ttt"));
@@ -37,10 +37,12 @@ public class DbVerticle extends AbstractVerticle {
                         promise.complete();
                     } else {
                         logger.error(ar.cause());
+                        promise.fail(ar.cause());
                     }
                 });
             } else {
                 logger.error(ar.cause());
+                promise.fail(ar.cause());
             }
         });
     }
@@ -66,7 +68,7 @@ public class DbVerticle extends AbstractVerticle {
             if (car.succeeded()) {
                 SQLConnection connection = car.result();
                 JsonArray params = new JsonArray();
-                params.add("title").add("uuid");
+                params.add("sss").add("ddd");
                 connection.updateWithParams(createMedia, params, creationRes -> {
                     connection.close();
                     if (creationRes.succeeded()) {
@@ -78,6 +80,7 @@ public class DbVerticle extends AbstractVerticle {
                     }
                 });
             } else {
+                message.fail(500, car.cause().getMessage());
                 logger.error(car.cause());
             }
         });

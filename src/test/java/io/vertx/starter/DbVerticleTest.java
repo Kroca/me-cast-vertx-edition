@@ -24,7 +24,10 @@ public class DbVerticleTest {
         vertx = Vertx.vertx();
         Async async = context.async();
         vertx.deployVerticle(new DbVerticle(), new DeploymentOptions().setConfig(new JsonObject().put("test", "what the fuck")),
-                res -> async.complete());
+                res -> {
+                    System.out.println("Deployed " + res.result());
+                    async.complete();
+                });
     }
 
     @After

@@ -6,6 +6,7 @@ import io.vertx.core.file.AsyncFile;
 import io.vertx.core.file.OpenOptions;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.FileUpload;
@@ -15,9 +16,12 @@ import io.vertx.ext.web.handler.BodyHandler;
 
 import java.util.List;
 
+import static io.vertx.starter.util.EBPaths.DB_MEDIA;
+
 public class UploadHandlerVerticle extends AbstractVerticle {
 
     private Logger logger = LoggerFactory.getLogger(UploadHandlerVerticle.class);
+    private static final String CONTENT_TYPE_MP3 = "audio/mp3";
 
     @Override
     public void start(Promise promise) throws Exception {
@@ -28,7 +32,6 @@ public class UploadHandlerVerticle extends AbstractVerticle {
         Router router = Router.router(vertx);
         // Enable multipart form data parsing
         router.route().handler(BodyHandler.create().setUploadsDirectory("src/main/uploads"));
-
 
 
         List<String> files = vertx.fileSystem().readDirBlocking("src/main/uploads");
@@ -58,12 +61,14 @@ public class UploadHandlerVerticle extends AbstractVerticle {
             ctx.response().setChunked(true);
 
             for (FileUpload f : ctx.fileUploads()) {
-                System.out.println("f");
+
+                System.out.println(String.format("filename %s uuid %s format %s content-type %s",
+                        f.fileName(), f.uploadedFileName(), f.contentTransferEncoding(), f.contentType()));
                 ctx.response().write("Filename: " + f.fileName());
                 ctx.response().write("\n");
                 ctx.response().write("Size: " + f.size());
             }
-
+//            vertx.eventBus().send(DB_MEDIA,)
             ctx.response().end();
         });
 
