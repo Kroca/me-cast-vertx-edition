@@ -18,10 +18,10 @@ public class DbVerticle extends AbstractVerticle {
     private String createMediaTable = "CREATE TABLE IF NOT EXISTS MEDIA(ID integer identity primary key, title varchar(255), uuid varchar (255) unique );";
     private String getAllMedia = "SELECT * from MEDIA";
     private String createMedia = "insert into MEDIA(id,title,uuid) values (null,?,?)";
-    JDBCClient jdbcClient;
+    private JDBCClient jdbcClient;
 
     @Override
-    public void start(Promise promise) throws Exception {
+    public void start(Promise promise) {
         jdbcClient = JDBCClient.createShared(vertx, new JsonObject()
                 .put("url", "jdbc:hsqldb:file:db/wiki")
                 .put("driver_class", "org.hsqldb.jdbcDriver")
@@ -33,7 +33,6 @@ public class DbVerticle extends AbstractVerticle {
                 connection.query(createMediaTable, creationAr -> {
                     connection.close();
                     if (creationAr.succeeded()) {
-                        System.out.println("Success");
                         vertx.eventBus().localConsumer(DB_MEDIA, this::onMessage);
                         promise.complete();
                     } else {
@@ -42,10 +41,8 @@ public class DbVerticle extends AbstractVerticle {
                 });
             } else {
                 logger.error(ar.cause());
-                promise.fail("Hui");
             }
         });
-
     }
 
     private void onMessage(Message<String> message) {
@@ -53,10 +50,10 @@ public class DbVerticle extends AbstractVerticle {
         String action = message.body();
         switch (action) {
             case "create":
-                saveMedia();
+                saveMedia(message);
                 break;
             case "getList":
-                getMediaList();
+                getMediaList(message);
                 break;
             default:
                 System.out.println("idi naher");
@@ -64,7 +61,7 @@ public class DbVerticle extends AbstractVerticle {
         }
     }
 
-    public void saveMedia() {
+    public void saveMedia(Message<String> message) {
         jdbcClient.getConnection(car -> {
             if (car.succeeded()) {
                 SQLConnection connection = car.result();
@@ -74,7 +71,9 @@ public class DbVerticle extends AbstractVerticle {
                     connection.close();
                     if (creationRes.succeeded()) {
                         System.out.println("Success :" + creationRes.result().toJson());
+                        message.reply(creationRes.result().toJson().toString());
                     } else {
+                        message.fail(500, creationRes.cause().getLocalizedMessage());
                         logger.error(creationRes.cause());
                     }
                 });
@@ -84,15 +83,17 @@ public class DbVerticle extends AbstractVerticle {
         });
     }
 
-    private void getMediaList() {
+    private void getMediaList(Message<String> message) {
         jdbcClient.getConnection(car -> {
             if (car.succeeded()) {
                 SQLConnection connection = car.result();
                 connection.query(getAllMedia, res -> {
                     connection.close();
                     if (res.succeeded()) {
+                        message.reply(res.result().toJson().toString());
                         System.out.println(res.result().toJson());
                     } else {
+                        message.fail(500, res.cause().getLocalizedMessage());
                         logger.error(res.cause());
                     }
                 });

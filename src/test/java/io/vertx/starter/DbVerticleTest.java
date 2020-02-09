@@ -23,10 +23,8 @@ public class DbVerticleTest {
     public void setUp(TestContext context) {
         vertx = Vertx.vertx();
         Async async = context.async();
-        vertx.deployVerticle(new DbVerticle(), new DeploymentOptions().setConfig(new JsonObject().put("test", "what the fuck")), res -> {
-            async.complete();
-            System.out.println("succeded");
-        });
+        vertx.deployVerticle(new DbVerticle(), new DeploymentOptions().setConfig(new JsonObject().put("test", "what the fuck")),
+                res -> async.complete());
     }
 
     @After
@@ -37,14 +35,20 @@ public class DbVerticleTest {
 
     @Test
     public void checkCanCreateNewEntity(TestContext testContext) throws InterruptedException {
-        System.out.println("sent");
-        vertx.eventBus().publish(DB_MEDIA, "create");
+        Async async = testContext.async();
+        vertx.eventBus().request(DB_MEDIA, "create", res -> {
+            System.out.println(res.result());
+            async.complete();
+        });
     }
 
     @Test
     public void getMediaList(TestContext testContext) throws InterruptedException {
-        vertx.eventBus().publish(DB_MEDIA, "getList");
-        Thread.sleep(5000L);
+        Async async = testContext.async();
+        vertx.eventBus().request(DB_MEDIA, "getList", res -> {
+            System.out.println(res.result());
+            async.complete();
+        });
     }
 
 }
