@@ -10,6 +10,7 @@ import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import io.vertx.starter.db.MediaDbService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import static io.vertx.starter.util.EBPaths.DB_MEDIA;
 public class DbVerticleTest {
 
     private Vertx vertx;
+    private MediaDbService mediaDbService;
 
     @Before
     public void setUp(TestContext context) {
@@ -32,6 +34,7 @@ public class DbVerticleTest {
                     System.out.println("Deployed " + res.result());
                     async.complete();
                 });
+        mediaDbService = MediaDbService.createProxy(vertx, DB_MEDIA);
     }
 
     @After
@@ -43,35 +46,30 @@ public class DbVerticleTest {
     @Test
     public void checkCanCreateNewEntity(TestContext testContext) throws InterruptedException {
         Async async = testContext.async();
-        JsonObject fileToUpload = new JsonObject();
-        fileToUpload.put("title", "someTitle");
-        fileToUpload.put("path", "realPath");
-        DeliveryOptions options = new DeliveryOptions().addHeader("method", "save");
-        vertx.eventBus().request(DB_MEDIA, fileToUpload, options, res -> {
+        System.out.println("ashahs");
+        mediaDbService.save("someTitle", "somePath", res -> {
             System.out.println(res.result());
             async.complete();
         });
+
     }
 
     @Test
     public void getMediaList(TestContext testContext) throws InterruptedException {
         Async async = testContext.async();
-        JsonObject file = new JsonObject();
-        DeliveryOptions options = new DeliveryOptions().addHeader("method", "list");
-        vertx.eventBus().request(DB_MEDIA, file, options, res -> {
-            System.out.println(res.result());
-            async.complete();
+        mediaDbService.save("someTitle", "somePath", res -> {
+            mediaDbService.getMediaList(nres -> {
+                System.out.println(nres.result());
+                async.complete();
+            });
         });
+
     }
 
     @Test
     public void canFindOne(TestContext testContext) {
         Async async = testContext.async();
-        JsonObject fileToFind = new JsonObject();
-        fileToFind.put("id", 0);
-        DeliveryOptions options = new DeliveryOptions().addHeader("method", "findOne");
-        vertx.eventBus().request(DB_MEDIA, fileToFind, options, res -> {
-            System.out.println(res.result().body());
+        mediaDbService.findOne(0L, res -> {
             async.complete();
         });
     }
