@@ -28,12 +28,9 @@ public class DbVerticleTest {
     @Before
     public void setUp(TestContext context) {
         vertx = Vertx.vertx();
-        Async async = context.async();
+
         vertx.deployVerticle(new DbVerticle(), new DeploymentOptions().setConfig(new JsonObject().put("test", "what the fuck")),
-                res -> {
-                    System.out.println("Deployed " + res.result());
-                    async.complete();
-                });
+                context.asyncAssertSuccess());
         mediaDbService = MediaDbService.createProxy(vertx, DB_MEDIA);
     }
 
@@ -45,25 +42,14 @@ public class DbVerticleTest {
 
     @Test
     public void checkCanCreateNewEntity(TestContext testContext) throws InterruptedException {
-        Async async = testContext.async();
-        System.out.println("ashahs");
-        mediaDbService.save("someTitle", "somePath", res -> {
-            System.out.println(res.result());
-            async.complete();
-        });
+
+        mediaDbService.save("someTitle", "somePath", testContext.asyncAssertSuccess());
 
     }
 
     @Test
     public void getMediaList(TestContext testContext) throws InterruptedException {
-        Async async = testContext.async();
-        mediaDbService.save("someTitle", "somePath", res -> {
-            mediaDbService.getMediaList(nres -> {
-                System.out.println(nres.result());
-                async.complete();
-            });
-        });
-
+        mediaDbService.getMediaList(testContext.asyncAssertSuccess(System.out::println));
     }
 
     @Test

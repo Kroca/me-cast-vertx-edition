@@ -2,13 +2,10 @@ package io.vertx.starter;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.jdbc.JDBCClient;
-import io.vertx.ext.sql.SQLConnection;
 import io.vertx.serviceproxy.ServiceBinder;
 import io.vertx.starter.db.MediaDbService;
 
@@ -36,6 +33,8 @@ public class DbVerticle extends AbstractVerticle {
             }
         });
     }
+
+
 
 
 }
