@@ -3,74 +3,19 @@
         <div class="col-sm">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <div class="media">
-                        <img class="align-self-center mr-3" src="images/placeholder.png" alt="Generic placeholder image"
-                             style="width: 60px">
-                        <div class="media-body">
-                            <h5 class="mt-0">Morze</h5>
-                            <p>Slider and Magnit</p>
+                    <div ng-repeat="file in $ctrl.media">
+                        <div class="media">
+                            <img class="align-self-center mr-3" src="images/placeholder.png"
+                                 alt="Generic placeholder image"
+                                 style="width: 100px">
+                            <div class="media-body">
+                                <h5 class="mt-0">{{file[1]}}</h5>
+                                <p>{{file[2]}}</p>
+                            </div>
+                            <button>Play</button>
                         </div>
-                        <button>Some button</button>
                     </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="media">
-                        <img class="align-self-center mr-3" src="images/placeholder.png" alt="Generic placeholder image"
-                             style="width: 60px">
-                        <div class="media-body">
-                            <h5 class="mt-0">Morze</h5>
-                            <p>Slider and Magnit</p>
-                        </div>
-                        <button>Some button</button>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="media">
-                        <img class="align-self-center mr-3" src="images/placeholder.png" alt="Generic placeholder image"
-                             style="width: 60px">
-                        <div class="media-body">
-                            <h5 class="mt-0">Morze</h5>
-                            <p>Slider and Magnit</p>
-                        </div>
-                        <button>Some button</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="col-sm">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="media">
-                        <img class="align-self-center mr-3" src="images/placeholder.png" alt="Generic placeholder image"
-                             style="width: 60px">
-                        <div class="media-body">
-                            <h5 class="mt-0">Morze</h5>
-                            <p>Slider and Magnit</p>
-                        </div>
-                        <button>Some button</button>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="media">
-                        <img class="align-self-center mr-3" src="images/placeholder.png" alt="Generic placeholder image"
-                             style="width: 60px">
-                        <div class="media-body">
-                            <h5 class="mt-0">Morze</h5>
-                            <p>Slider and Magnit</p>
-                        </div>
-                        <button>Some button</button>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="media">
-                        <img class="align-self-center mr-3" src="images/placeholder.png" alt="Generic placeholder image"
-                             style="width: 60px">
-                        <div class="media-body">
-                            <h5 class="mt-0">Morze</h5>
-                            <p>Slider and Magnit</p>
-                        </div>
-                        <button>Some button</button>
-                    </div>
+
                 </li>
             </ul>
         </div>

@@ -1,4 +1,5 @@
 angular.module('ucastApp', [
     'ngRoute',
-    'mediaList'
+    'mediaList',
+    'upload'
 ]);

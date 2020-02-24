@@ -4,7 +4,7 @@ angular.module('ucastApp').config(['$routeProvider',
             .when('/list', {
                 template: '<media-list></media-list>'
             }).when('/upload', {
-            template: 'There is going to be upload page soon.'
+            template: '<upload></upload>'
         }).otherwise('/');
     }
 ]);
