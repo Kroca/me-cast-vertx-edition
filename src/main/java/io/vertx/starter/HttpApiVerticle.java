@@ -24,7 +24,7 @@ public class HttpApiVerticle extends AbstractVerticle {
     private MediaDbService mediaDbService;
 
     @Override
-    public void start(Promise<Void> startPromise) throws Exception {
+    public void start(Promise<Void> startPromise) {
         Router router = Router.router(vertx);
         this.mediaDbService = MediaDbService.createProxy(vertx, DB_MEDIA);
         router.route().handler(BodyHandler.create().setUploadsDirectory("src/main/uploads"));
@@ -48,7 +48,9 @@ public class HttpApiVerticle extends AbstractVerticle {
         }
         CompositeFuture.all(savedFiles).setHandler(ar -> {
             if (ar.succeeded()) {
-                context.response().end("Files uploaded");
+                context.response().setStatusCode(303);
+                context.response().putHeader("Location", "/index.html");
+                context.response().end();
             } else {
                 logger.error("Could't save any data");
                 context.fail(500);
