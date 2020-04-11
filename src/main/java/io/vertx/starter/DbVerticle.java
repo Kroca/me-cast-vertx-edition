@@ -17,7 +17,7 @@ public class DbVerticle extends AbstractVerticle {
     @Override
     public void start(Promise promise) {
         JDBCClient jdbcClient = JDBCClient.createShared(vertx, new JsonObject()
-                .put("url", "jdbc:hsqldb:mem:db/wiki")
+                .put("url", "jdbc:hsqldb:file:db/wiki")
                 .put("driver_class", "org.hsqldb.jdbcDriver")
                 .put("max_pool_size", 30));
 
@@ -33,8 +33,4 @@ public class DbVerticle extends AbstractVerticle {
             }
         });
     }
-
-
-
-
 }

@@ -2,15 +2,22 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
+      <profile name="Annotation profile for vertx-start-project" enabled="true">
+        <sourceOutputDir name="src/main/generated" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="vertx-start-project" />
+        <option name="outputDirectory" value="$PROJECT_DIR$/src/main" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="me-cast-vertx-edition" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="vertx-start-project" target="1.8" />
+      <module name="me-cast-vertx-edition" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="me-cast-vertx-edition" options="-AoutputDirectory=$PROJECT_DIR$/src/main" />
+    </option>
   </component>
 </project>

@@ -5,6 +5,10 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
+import io.vertx.core.file.AsyncFile;
+import io.vertx.core.file.OpenOptions;
+import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.FileUpload;
@@ -35,12 +39,40 @@ public class HttpApiVerticle extends AbstractVerticle {
 
         router.post().handler(BodyHandler.create());
         router.post("/upload").handler(this::uploadMedia);
+        router.get("/download/:id").handler(this::downloadMedia);
 
         vertx.createHttpServer().requestHandler(router).listen(8080);
     }
 
-    private void uploadMedia(RoutingContext context) {
+    private void downloadMedia(RoutingContext context) {
+        Long fileId = Long.valueOf(context.request().getParam("id"));
+        mediaDbService.findOne(fileId, res -> {
+            if (res.succeeded()) {
+                JsonObject result = res.result();
+                String path = result.getString("path");
+                if (!vertx.fileSystem().existsBlocking(path)) {
+                    context.response().setStatusCode(400).end();
+                }
 
+                OpenOptions openOptions = new OpenOptions().setRead(true);
+                vertx.fileSystem().open(path, openOptions, ar -> {
+                    if (ar.succeeded()) {
+                        HttpServerResponse response = context.response();
+                        response.setStatusCode(200).putHeader("Content-Type", "audio/mpeg").setChunked(true);
+                        AsyncFile file = ar.result();
+                        file.pipeTo(response);
+                    } else {
+                        logger.error(ar.cause());
+                        context.response().setStatusCode(500).end();
+                    }
+                });
+            } else {
+                context.fail(res.cause());
+            }
+        });
+    }
+
+    private void uploadMedia(RoutingContext context) {
         List<Future> savedFiles = new ArrayList<>();
         System.out.println(context.fileUploads());
         for (FileUpload fileUpload : context.fileUploads()) {

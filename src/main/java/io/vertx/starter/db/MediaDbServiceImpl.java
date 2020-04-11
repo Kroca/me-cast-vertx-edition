@@ -66,7 +66,11 @@ public class MediaDbServiceImpl implements MediaDbService {
                 logger.error(res.cause());
                 resultHandler.handle(Future.failedFuture(res.cause()));
             } else {
-                resultHandler.handle(Future.succeededFuture(res.result().toJson()));
+                JsonObject jsonObject = new JsonObject();
+                JsonArray jsonArray = res.result().getResults().get(0);
+                jsonObject.put("title", jsonArray.getString(1));
+                jsonObject.put("path", jsonArray.getString(2));
+                resultHandler.handle(Future.succeededFuture(jsonObject));
             }
         });
         return this;

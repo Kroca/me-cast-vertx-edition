@@ -3,6 +3,7 @@
         <div class="col-sm">
             <ul class="list-group">
                 <li class="list-group-item">
+                    <!-- Media[0] - id, media[1] - title, media[2] - filepath //todo create pojos -->
                     <div ng-repeat="file in $ctrl.media">
                         <div class="media">
                             <img class="align-self-center mr-3" src="images/placeholder.png"
@@ -12,7 +13,7 @@
                                 <h5 class="mt-0">{{file[1]}}</h5>
                                 <p>{{file[2]}}</p>
                             </div>
-                            <button>Play</button>
+                            <button ng-click="$ctrl.loadData(file[0])">Play</button>
                         </div>
                     </div>
 
