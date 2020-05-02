@@ -1,4 +1,4 @@
-package io.vertx.starter.db;
+package kroca.youcast.db;
 
 import io.vertx.codegen.annotations.Fluent;
 import io.vertx.codegen.annotations.GenIgnore;

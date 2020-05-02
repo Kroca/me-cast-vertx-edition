@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/me-cast-vertx-edition.iml" filepath="$PROJECT_DIR$/.idea/me-cast-vertx-edition.iml" />
+      <module fileurl="file://$PROJECT_DIR$/vertx-start-project.iml" filepath="$PROJECT_DIR$/vertx-start-project.iml" />
     </modules>
   </component>
 </project>

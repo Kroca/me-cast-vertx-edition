@@ -1,4 +1,4 @@
-package io.vertx.starter;
+package kroca.youcast;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
@@ -7,7 +7,6 @@ import io.vertx.core.file.AsyncFile;
 import io.vertx.core.file.OpenOptions;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -16,10 +15,9 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
+import kroca.youcast.util.EBPaths;
 
 import java.util.List;
-
-import static io.vertx.starter.util.EBPaths.DB_MEDIA;
 
 public class UploadHandlerVerticle extends AbstractVerticle {
 
@@ -69,7 +67,7 @@ public class UploadHandlerVerticle extends AbstractVerticle {
                 //todo add batch handling
                 DeliveryOptions deliveryOptions = new DeliveryOptions().addHeader("method", "save");
                 //todo add response handler
-                vertx.eventBus().send(DB_MEDIA, uploadedFile, deliveryOptions);
+                vertx.eventBus().send(EBPaths.DB_MEDIA, uploadedFile, deliveryOptions);
             }
             ctx.response().end();
         });

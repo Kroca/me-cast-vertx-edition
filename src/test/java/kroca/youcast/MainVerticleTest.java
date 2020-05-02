@@ -1,4 +1,4 @@
-package io.vertx.starter;
+package kroca.youcast;
 
 import io.vertx.core.Vertx;
 import io.vertx.ext.unit.Async;
@@ -8,10 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.List;
-
-import static java.util.Arrays.asList;
 
 @RunWith(VertxUnitRunner.class)
 public class MainVerticleTest {

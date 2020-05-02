@@ -2,22 +2,25 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile name="Annotation profile for vertx-start-project" enabled="true">
+      <profile name="Annotation profile for Youcast" enabled="true">
         <sourceOutputDir name="src/main/generated" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <option name="outputDirectory" value="$PROJECT_DIR$/src/main" />
+        <option name="outputDirectory" value="C:\Users\Kroca\Desktop\Study\java\me-cast-vertx-edition/src/main" />
         <processor name="io.vertx.codegen.CodeGenProcessor" />
         <module name="me-cast-vertx-edition" />
+        <module name="vertx-start-project" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="me-cast-vertx-edition" target="1.8" />
+      <module name="vertx-start-project" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="me-cast-vertx-edition" options="-AoutputDirectory=$PROJECT_DIR$/src/main" />
+      <module name="vertx-start-project" options="-AoutputDirectory=C:\Users\Kroca\Desktop\Study\java\me-cast-vertx-edition/src/main" />
     </option>
   </component>
 </project>

@@ -1,6 +1,5 @@
-package io.vertx.starter;
+package kroca.youcast;
 
-import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -16,12 +15,12 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
-import io.vertx.starter.db.MediaDbService;
+import kroca.youcast.db.MediaDbService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.vertx.starter.util.EBPaths.DB_MEDIA;
+import static kroca.youcast.util.EBPaths.DB_MEDIA;
 
 public class HttpApiVerticle extends AbstractVerticle {
     private Logger logger = LoggerFactory.getLogger(HttpApiVerticle.class);

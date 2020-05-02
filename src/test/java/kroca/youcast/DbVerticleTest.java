@@ -1,22 +1,18 @@
-package io.vertx.starter;
+package kroca.youcast;
 
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
-import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import io.vertx.starter.db.MediaDbService;
+import kroca.youcast.db.MediaDbService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static io.vertx.starter.util.EBPaths.DB_MEDIA;
+import static kroca.youcast.util.EBPaths.DB_MEDIA;
 
 //fixme add actual result checks
 @RunWith(VertxUnitRunner.class)

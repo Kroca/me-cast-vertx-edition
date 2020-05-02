@@ -2,19 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8c50cc0c-0030-4821-aa27-6be1056c71d2" name="Default Changelist" comment="clickable files">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/webroot/lib/howler.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/webroot/lib/howler.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/DbVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/vertx/starter/DbVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/HttpApiVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/vertx/starter/HttpApiVerticle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/db/MediaDbServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/vertx/starter/db/MediaDbServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/webroot/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/webroot/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/webroot/media-list/media-list.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/webroot/media-list/media-list.component.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/webroot/media-list/media-list.template.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/webroot/media-list/media-list.template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redeploy.bat" beforeDir="false" afterPath="$PROJECT_DIR$/redeploy.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redeploy.sh" beforeDir="false" afterPath="$PROJECT_DIR$/redeploy.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/DbVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/DbVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/HttpApiVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/HttpApiVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/MainVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/MainVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/Starter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/Starter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/UploadHandlerVerticle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/UploadHandlerVerticle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/db/MediaDbService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/db/MediaDbService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/db/MediaDbServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/db/MediaDbServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/db/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/db/package-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/vertx/starter/util/EBPaths.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kroca/youcast/util/EBPaths.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/io/vertx/starter/DbVerticleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/kroca/youcast/DbVerticleTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/io/vertx/starter/MainVerticleTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/kroca/youcast/MainVerticleTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vertx-start-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/vertx-start-project.iml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,11 +45,19 @@
     <other-services-enabled>true</other-services-enabled>
     <auto-save>true</auto-save>
   </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
   <component name="ProjectId" id="1ViLBAb6api4x7TALjMEb4AB1Ju" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/webroot/images" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -64,6 +78,7 @@
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="mvn clean" />
+      <command value="mvn clean package" />
     </option>
   </component>
   <component name="RunDashboard">
@@ -78,7 +93,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Starter">
+  <component name="RunManager" selected="JUnit.DbVerticleTest (1)">
     <configuration name="MainVerticle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="io.vertx.starter.MainVerticle" />
       <module name="vertx-start-project" />
@@ -105,15 +120,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UploadHandlerVerticle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="io.vertx.starter.UploadHandlerVerticle" />
+    <configuration name="DbVerticleTest (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="vertx-start-project" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="io.vertx.starter.*" />
+          <option name="PATTERN" value="kroca.youcast.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="kroca.youcast" />
+      <option name="MAIN_CLASS_NAME" value="kroca.youcast.DbVerticleTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -139,11 +156,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.DbVerticleTest (1)" />
         <item itemvalue="Application.Starter" />
         <item itemvalue="JAR Application.vertx-start-project-1.0-SNAPSHOT-fat.jar" />
         <item itemvalue="JUnit.DbVerticleTest" />
         <item itemvalue="Application.MainVerticle" />
-        <item itemvalue="Application.UploadHandlerVerticle" />
       </list>
     </recent_temporary>
   </component>
@@ -174,6 +191,7 @@
       <workItem from="1584380345550" duration="364000" />
       <workItem from="1584517534167" duration="52000" />
       <workItem from="1586621602307" duration="2091000" />
+      <workItem from="1588432124683" duration="842000" />
     </task>
     <task id="LOCAL-00001" summary="clickable files">
       <created>1581269723669</created>

@@ -1,4 +1,4 @@
-package io.vertx.starter;
+package kroca.youcast;
 
 import io.vertx.core.AbstractVerticle;
 

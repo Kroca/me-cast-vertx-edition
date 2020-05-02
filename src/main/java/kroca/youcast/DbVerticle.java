@@ -1,4 +1,4 @@
-package io.vertx.starter;
+package kroca.youcast;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
@@ -7,9 +7,8 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.serviceproxy.ServiceBinder;
-import io.vertx.starter.db.MediaDbService;
-
-import static io.vertx.starter.util.EBPaths.DB_MEDIA;
+import kroca.youcast.db.MediaDbService;
+import kroca.youcast.util.EBPaths;
 
 public class DbVerticle extends AbstractVerticle {
     private Logger logger = LoggerFactory.getLogger(DbVerticle.class);
@@ -27,7 +26,7 @@ public class DbVerticle extends AbstractVerticle {
                 promise.fail(res.cause());
             } else {
                 ServiceBinder binder = new ServiceBinder(vertx);
-                binder.setAddress(DB_MEDIA)
+                binder.setAddress(EBPaths.DB_MEDIA)
                         .register(MediaDbService.class, res.result());
                 promise.complete();
             }

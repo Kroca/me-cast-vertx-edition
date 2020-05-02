@@ -1,20 +1,14 @@
-package io.vertx.starter.db;
+package kroca.youcast.db;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.Promise;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.SQLConnection;
-import io.vertx.starter.DbVerticle;
-
-import static io.vertx.starter.util.EBPaths.DB_MEDIA;
 
 public class MediaDbServiceImpl implements MediaDbService {
     private Logger logger = LoggerFactory.getLogger(MediaDbServiceImpl.class);

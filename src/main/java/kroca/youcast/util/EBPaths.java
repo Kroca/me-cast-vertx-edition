@@ -1,4 +1,4 @@
-package io.vertx.starter.util;
+package kroca.youcast.util;
 
 public class EBPaths {
 
