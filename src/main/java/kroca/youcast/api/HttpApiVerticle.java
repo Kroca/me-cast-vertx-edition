@@ -1,4 +1,4 @@
-package kroca.youcast;
+package kroca.youcast.api;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;

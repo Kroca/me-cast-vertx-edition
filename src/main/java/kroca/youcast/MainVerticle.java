@@ -1,6 +1,8 @@
 package kroca.youcast;
 
 import io.vertx.core.AbstractVerticle;
+import kroca.youcast.api.HttpApiVerticle;
+import kroca.youcast.db.DbVerticle;
 
 public class MainVerticle extends AbstractVerticle {
 

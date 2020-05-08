@@ -1,4 +1,4 @@
-package kroca.youcast;
+package kroca.youcast.db;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
@@ -7,7 +7,6 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.serviceproxy.ServiceBinder;
-import kroca.youcast.db.MediaDbService;
 import kroca.youcast.util.EBPaths;
 
 public class DbVerticle extends AbstractVerticle {

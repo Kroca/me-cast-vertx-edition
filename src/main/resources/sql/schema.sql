@@ -1,1 +1,0 @@
-CREATE TABLE IF NOT EXISTS MEDIA(ID integer identity primary key, title varchar(255), uuid varchar (255) unique );

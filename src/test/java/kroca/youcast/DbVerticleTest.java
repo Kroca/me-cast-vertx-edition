@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
+import kroca.youcast.db.DbVerticle;
 import kroca.youcast.db.MediaDbService;
 import org.junit.After;
 import org.junit.Before;
