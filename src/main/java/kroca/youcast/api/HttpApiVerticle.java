@@ -51,8 +51,9 @@ public class HttpApiVerticle extends AbstractVerticle {
                 String path = result.getString("path");
                 if (!vertx.fileSystem().existsBlocking(path)) {
                     context.response().setStatusCode(400).end();
+                    return;
                 }
-
+                //todo fix dowloads. browsers think it is streaming :D
                 OpenOptions openOptions = new OpenOptions().setRead(true);
                 vertx.fileSystem().open(path, openOptions, ar -> {
                     if (ar.succeeded()) {
