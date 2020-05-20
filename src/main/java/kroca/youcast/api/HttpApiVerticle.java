@@ -1,21 +1,23 @@
 package kroca.youcast.api;
 
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.file.AsyncFile;
+import io.vertx.core.file.FileProps;
 import io.vertx.core.file.OpenOptions;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import kroca.youcast.db.MediaDbService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,16 +55,24 @@ public class HttpApiVerticle extends AbstractVerticle {
                     context.response().setStatusCode(400).end();
                     return;
                 }
-                //todo fix dowloads. browsers think it is streaming :D
+
                 OpenOptions openOptions = new OpenOptions().setRead(true);
+                vertx.fileSystem().props(path, props -> {
+                    FileProps fileProps = props.result();
+                    fileProps.size();
+                    HttpServerResponse response = context.response().putHeader("Content-Length", "" + fileProps.size());
+                });
                 vertx.fileSystem().open(path, openOptions, ar -> {
                     if (ar.succeeded()) {
                         HttpServerResponse response = context.response();
-                        response.setStatusCode(200).putHeader("Content-Type", "audio/mpeg").setChunked(true);
+                        response.setStatusCode(200)
+                                .putHeader("Content-Type", "audio/mpeg")
+                                .putHeader("Accept-Ranges", "bytes")
+                                .setChunked(true);
                         AsyncFile file = ar.result();
                         file.pipeTo(response);
                     } else {
-                        logger.error(ar.cause());
+                        logger.error(ar.cause().getMessage());
                         context.response().setStatusCode(500).end();
                     }
                 });
@@ -96,7 +106,7 @@ public class HttpApiVerticle extends AbstractVerticle {
             if (res.succeeded()) {
                 context.response().end(res.result().encode());
             } else {
-                logger.error(res.cause());
+                logger.error(res.cause().getMessage());
                 context.fail(res.cause());
             }
         });
