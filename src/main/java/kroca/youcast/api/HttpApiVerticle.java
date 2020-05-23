@@ -7,6 +7,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.file.AsyncFile;
 import io.vertx.core.file.FileProps;
+import io.vertx.core.file.FileSystem;
 import io.vertx.core.file.OpenOptions;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.Json;
@@ -65,29 +66,27 @@ public class HttpApiVerticle extends AbstractVerticle {
                     context.response().setStatusCode(400).end();
                     return;
                 }
-
+                FileSystem fileSystem = vertx.fileSystem();
                 OpenOptions openOptions = new OpenOptions().setRead(true);
-                vertx.fileSystem().props(path, props -> {
+                fileSystem.props(path, props -> {
                     FileProps fileProps = props.result();
                     fileProps.size();
-                    HttpServerResponse response = context.response().putHeader("Content-Length", "" + fileProps.size());
-                });
-                vertx.fileSystem().open(path, openOptions, ar -> {
-                    if (ar.succeeded()) {
-                        HttpServerResponse response = context.response();
-                        response.setStatusCode(200)
-                                .putHeader("Content-Type", "audio/mpeg")
-                                .putHeader("Accept-Ranges", "bytes")
-                                .setChunked(true);
-                        AsyncFile file = ar.result();
-                        file.pipeTo(response);
-                        file.endHandler(end -> {
-                            response.end();
-                        });
-                    } else {
-                        logger.error(ar.cause().getMessage());
-                        context.response().setStatusCode(500).end();
-                    }
+                    fileSystem.open(path, openOptions, ar -> {
+                        if (ar.succeeded()) {
+                            HttpServerResponse response = context.response();
+                            response.setStatusCode(200)
+                                    .putHeader("Content-Length", "" + fileProps.size())
+                                    .putHeader("Content-Type", "audio/mpeg")
+                                    .putHeader("Accept-Ranges", "bytes")
+                                    .setChunked(true);
+                            AsyncFile file = ar.result();
+                            file.pipeTo(response);
+                            file.endHandler(endRes -> response.end());
+                        } else {
+                            logger.error(ar.cause().getMessage());
+                            context.response().setStatusCode(500).end();
+                        }
+                    });
                 });
             } else {
                 context.fail(res.cause());
@@ -110,7 +109,6 @@ public class HttpApiVerticle extends AbstractVerticle {
             if (ar.succeeded()) {
                 context.response().setStatusCode(303);
                 context.response().putHeader("Location", "/index.html");
-//                context.response().setStatusCode(200);
                 context.response().end();
             } else {
                 logger.error("Could't save any data");
