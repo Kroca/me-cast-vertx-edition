@@ -14,11 +14,12 @@ public class DbVerticle extends AbstractVerticle {
 
     @Override
     public void start(Promise promise) {
-        JDBCClient jdbcClient = JDBCClient.createShared(vertx, new JsonObject()
-                .put("url", "jdbc:hsqldb:file:db/wiki")
-                .put("driver_class", "org.hsqldb.jdbcDriver")
-                .put("max_pool_size", 30));
+        JsonObject dbConfig = new JsonObject()
+                .put("url", config().getString("url", "jdbc:hsqldb:file:db/wiki"))
+                .put("driver_class", config().getString("driver_class", "org.hsqldb.jdbcDriver"))
+                .put("max_pool_size", config().getInteger("max_pool_size", 30));
 
+        JDBCClient jdbcClient = JDBCClient.createShared(vertx, dbConfig);
         MediaDbService.create(jdbcClient, res -> {
             if (!res.succeeded()) {
                 logger.error(res.cause().getMessage());

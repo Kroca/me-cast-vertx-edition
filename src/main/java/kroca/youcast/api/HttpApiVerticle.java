@@ -9,6 +9,7 @@ import io.vertx.core.file.AsyncFile;
 import io.vertx.core.file.FileProps;
 import io.vertx.core.file.OpenOptions;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.ext.web.Router;
@@ -30,9 +31,12 @@ public class HttpApiVerticle extends AbstractVerticle {
 
     @Override
     public void start(Promise<Void> startPromise) {
+        JsonObject config = buildConfig();
         Router router = Router.router(vertx);
         this.mediaDbService = MediaDbService.createProxy(vertx, DB_MEDIA);
-        router.route().handler(BodyHandler.create().setUploadsDirectory("src/main/uploads"));
+        router.route().handler(BodyHandler.create()
+                .setUploadsDirectory(config.getString("fileUploadsDirectory"))
+        );
 
         router.get("/*").handler(StaticHandler.create().setCachingEnabled(false));
         router.get("/").handler(context -> context.reroute("/index.html"));
@@ -43,6 +47,12 @@ public class HttpApiVerticle extends AbstractVerticle {
         router.get("/download/:id").handler(this::downloadMedia);
 
         vertx.createHttpServer().requestHandler(router).listen(8080);
+    }
+
+    private JsonObject buildConfig() {
+        String defaultUploadsPath = "src/main/uploads";
+        return new JsonObject()
+                .put("fileUploadsDirectory", config().getString("fileUploadsDirectory", defaultUploadsPath));
     }
 
     private void downloadMedia(RoutingContext context) {
@@ -71,6 +81,9 @@ public class HttpApiVerticle extends AbstractVerticle {
                                 .setChunked(true);
                         AsyncFile file = ar.result();
                         file.pipeTo(response);
+                        file.endHandler(end -> {
+                            response.end();
+                        });
                     } else {
                         logger.error(ar.cause().getMessage());
                         context.response().setStatusCode(500).end();
@@ -84,14 +97,20 @@ public class HttpApiVerticle extends AbstractVerticle {
 
     private void uploadMedia(RoutingContext context) {
         List<Future> savedFiles = new ArrayList<>();
-        System.out.println(context.fileUploads());
         for (FileUpload fileUpload : context.fileUploads()) {
-            savedFiles.add(Future.<Void>future(promise -> mediaDbService.save(fileUpload.fileName(), fileUpload.uploadedFileName(), promise)));
+            if (fileUpload.contentType().startsWith("audio/")) {
+                savedFiles.add(Future.<Long>future(promise ->
+                        mediaDbService.save(fileUpload.fileName(), fileUpload.uploadedFileName(), promise)));
+            } else {
+                context.fail(400);
+                return;
+            }
         }
         CompositeFuture.all(savedFiles).setHandler(ar -> {
             if (ar.succeeded()) {
                 context.response().setStatusCode(303);
                 context.response().putHeader("Location", "/index.html");
+//                context.response().setStatusCode(200);
                 context.response().end();
             } else {
                 logger.error("Could't save any data");

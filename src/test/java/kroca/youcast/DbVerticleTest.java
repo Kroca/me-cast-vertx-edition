@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 
 import static kroca.youcast.util.EBPaths.DB_MEDIA;
 
-//fixme add actual result checks
 @RunWith(VertxUnitRunner.class)
 public class DbVerticleTest {
 
@@ -25,9 +24,12 @@ public class DbVerticleTest {
     @Before
     public void setUp(TestContext context) {
         vertx = Vertx.vertx();
+        JsonObject dbConfig = new JsonObject()
+                .put("url", "jdbc:hsqldb:mem:db/wiki")
+                .put("driver_class", "org.hsqldb.jdbcDriver")
+                .put("max_pool_size", 5);
 
-        vertx.deployVerticle(new DbVerticle(), new DeploymentOptions().setConfig(new JsonObject().put("test", "what the fuck")),
-                context.asyncAssertSuccess());
+        vertx.deployVerticle(new DbVerticle(), new DeploymentOptions().setConfig(dbConfig), context.asyncAssertSuccess());
         mediaDbService = MediaDbService.createProxy(vertx, DB_MEDIA);
     }
 
@@ -38,20 +40,38 @@ public class DbVerticleTest {
 
 
     @Test
-    public void checkCanCreateNewEntity(TestContext testContext) throws InterruptedException {
-//        mediaDbService.save("someTitle", "somePath", testContext.asyncAssertSuccess());
+    public void checkCanCreateNewEntity(TestContext testContext) {
+        Async async = testContext.async();
+        mediaDbService.save("someTitle", "somePath", res -> {
+            testContext.assertNotNull(res.result());
+            async.complete();
+        });
     }
 
     @Test
-    public void getMediaList(TestContext testContext) throws InterruptedException {
-        mediaDbService.getMediaList(testContext.asyncAssertSuccess(System.out::println));
+    public void getMediaList(TestContext testContext) {
+        Async async = testContext.async();
+        mediaDbService.save("someOtherTitle", "someOtherPath", testContext.asyncAssertSuccess());
+        mediaDbService.getMediaList(res -> {
+            testContext.assertTrue(res.result().size() > 0);
+            async.complete();
+        });
     }
 
     @Test
     public void canFindOne(TestContext testContext) {
         Async async = testContext.async();
-        mediaDbService.findOne(0L, res -> {
-            async.complete();
+        String title = "title";
+        String path = "path";
+        mediaDbService.save(title, path, res -> {
+            long newElementId = res.result();
+            mediaDbService.findOne(newElementId, findResult -> {
+                JsonObject object = findResult.result();
+                testContext.assertEquals(title, object.getString(title));
+                testContext.assertEquals(path, object.getString(path));
+                async.complete();
+            });
         });
+
     }
 }

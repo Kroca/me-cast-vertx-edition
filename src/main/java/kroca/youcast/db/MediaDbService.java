@@ -26,7 +26,7 @@ public interface MediaDbService {
     MediaDbService findOne(Long mediaId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent
-    MediaDbService save(String title, String path, Handler<AsyncResult<Void>> resultHandler);
+    MediaDbService save(String title, String path, Handler<AsyncResult<Long>> resultHandler);
 
     @GenIgnore
     static MediaDbService create(JDBCClient jdbcClient, Handler<AsyncResult<MediaDbService>> resultHandler) {

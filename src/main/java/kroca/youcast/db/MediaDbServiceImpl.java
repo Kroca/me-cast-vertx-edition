@@ -71,14 +71,15 @@ public class MediaDbServiceImpl implements MediaDbService {
     }
 
     @Override
-    public MediaDbService save(String title, String path, Handler<AsyncResult<Void>> resultHandler) {
+    public MediaDbService save(String title, String path, Handler<AsyncResult<Long>> resultHandler) {
         JsonArray params = new JsonArray().add(title).add(path);
         jdbcClient.updateWithParams(createMedia, params, res -> {
             if (!res.succeeded()) {
                 logger.error(res.cause());
                 resultHandler.handle(Future.failedFuture(res.cause()));
             } else {
-                resultHandler.handle(Future.succeededFuture());
+                long entityId = res.result().getKeys().getLong(0);
+                resultHandler.handle(Future.succeededFuture(entityId));
             }
         });
         return this;
