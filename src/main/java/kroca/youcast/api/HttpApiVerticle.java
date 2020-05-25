@@ -29,12 +29,14 @@ import static kroca.youcast.util.EBPaths.DB_MEDIA;
 public class HttpApiVerticle extends AbstractVerticle {
     private Logger logger = LoggerFactory.getLogger(HttpApiVerticle.class);
     private MediaDbService mediaDbService;
+    private RadioStreaming streaming;
 
     @Override
     public void start(Promise<Void> startPromise) {
         JsonObject config = buildConfig();
         Router router = Router.router(vertx);
         this.mediaDbService = MediaDbService.createProxy(vertx, DB_MEDIA);
+        streaming = new RadioStreaming(vertx);
         router.route().handler(BodyHandler.create()
                 .setUploadsDirectory(config.getString("fileUploadsDirectory"))
         );
@@ -42,7 +44,7 @@ public class HttpApiVerticle extends AbstractVerticle {
         router.get("/*").handler(StaticHandler.create().setCachingEnabled(false));
         router.get("/").handler(context -> context.reroute("/index.html"));
         router.get("/list").handler(this::loadAllMedia);
-
+        router.get("/radio").handler(streaming);
         router.post().handler(BodyHandler.create());
         router.post("/upload").handler(this::uploadMedia);
         router.get("/download/:id").handler(this::downloadMedia);
