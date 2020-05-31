@@ -11,23 +11,30 @@ import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
+/**
+ * Сама примитивная имплементация стриминга аудио потока на основе песен, лежащих в папке загрузок.
+ * Играет все загруженные на момент старта сервера песни по очереди (Делать онлайн обновление не инетересно)
+ */
 public class RadioStreaming implements Handler<RoutingContext> {
 
     private Logger logger = LoggerFactory.getLogger(RadioStreaming.class);
-
-    //    private Queue<String> playList = new ArrayDeque<>();
+    private final Vertx vertx;
+    private List<String> playList;
     private final Set<HttpServerResponse> activeListeners = new HashSet<>();
     private AsyncFile currentlyPlaying;
     private long positionInFile;
+    private int currentSongNumber;
 
     RadioStreaming(Vertx vertx) {
-        currentlyPlaying = vertx.fileSystem()
-                .openBlocking("src/main/uploads/c401f8a9-59cc-46ae-9f15-e494a79a4a9f", new OpenOptions().setRead(true));
-        positionInFile = 0;
-        vertx.setPeriodic(100, this::streamAudioChunk);
+        this.vertx = vertx;
+        startStreaming();
+    }
+
+    @Override
+    public void handle(RoutingContext context) {
+        addListener(context.request());
     }
 
     private void addListener(HttpServerRequest request) {
@@ -40,6 +47,17 @@ public class RadioStreaming implements Handler<RoutingContext> {
             logger.info("user left");
             activeListeners.remove(response);
         });
+    }
+
+    private void startStreaming() {
+        playList = vertx.fileSystem().readDirBlocking("src/main/uploads");
+        if (!playList.isEmpty()) {
+            currentlyPlaying = openFile(playList.get(0));
+            vertx.setPeriodic(100, this::streamAudioChunk);
+        } else {
+            logger.error("Nothing to stream. Upload songs and restart the server");
+        }
+
     }
 
     private void streamAudioChunk(long id) {
@@ -58,18 +76,30 @@ public class RadioStreaming implements Handler<RoutingContext> {
         logger.info("Read {} bytes from pos {}", buffer.length(), positionInFile);
         positionInFile += buffer.length();
         if (buffer.length() == 0) {
-            //reset
-            positionInFile = 0;
+            openNextSong();
         }
         activeListeners.forEach(listener -> {
             if (!listener.writeQueueFull()) {
                 listener.write(buffer.copy());
+            } else {
+                logger.error("write queue is full");
             }
         });
     }
 
-    @Override
-    public void handle(RoutingContext context) {
-        addListener(context.request());
+    private void openNextSong() {
+        if (currentSongNumber + 1 < playList.size()) {
+            currentSongNumber++;
+        } else if (currentSongNumber + 1 == playList.size()) {
+            currentSongNumber = 0;
+        }
+        openFile(playList.get(currentSongNumber));
+        //reset offset
+        positionInFile = 0;
+    }
+
+    private AsyncFile openFile(String fileName) {
+        return vertx.fileSystem()
+                .openBlocking(fileName, new OpenOptions().setRead(true));
     }
 }

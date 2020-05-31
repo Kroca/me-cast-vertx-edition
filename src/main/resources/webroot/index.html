@@ -31,6 +31,10 @@
         <div class="navbar-nav">
             <a class="nav-item nav-link" href="#!/upload">Upload</a>
             <a class="nav-item nav-link" href="#!/list">List</a>
+            <a class="nav-item nav-link" onclick="
+            var audioPlayer = document.getElementById('audioPlayer');
+            audioPlayer.src = 'http://localhost:8080/radio';
+            audioPlayer.play();">Radio</a>
         </div>
     </div>
 </nav>
