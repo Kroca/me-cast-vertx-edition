@@ -1,7 +1,7 @@
 {
   "name": "ucastApp",
   "dependencies": {
-    "angular": "1.7.x",
+    "angular": "1.8.x",
     "angular-route": "1.7.x",
     "bootstrap": "4.4.x",
     "jquery": "3.3.x"
