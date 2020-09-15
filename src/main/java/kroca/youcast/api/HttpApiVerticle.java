@@ -1,23 +1,24 @@
 package kroca.youcast.api;
 
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.CompositeFuture;
-import io.vertx.core.Future;
+import io.reactivex.Single;
 import io.vertx.core.Promise;
-import io.vertx.core.file.AsyncFile;
-import io.vertx.core.file.FileProps;
-import io.vertx.core.file.FileSystem;
 import io.vertx.core.file.OpenOptions;
-import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.FileUpload;
-import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.StaticHandler;
-import kroca.youcast.db.MediaDbService;
+import io.vertx.reactivex.SingleHelper;
+import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.core.CompositeFuture;
+import io.vertx.reactivex.core.Future;
+import io.vertx.reactivex.core.file.AsyncFile;
+import io.vertx.reactivex.core.file.FileProps;
+import io.vertx.reactivex.core.file.FileSystem;
+import io.vertx.reactivex.core.http.HttpServerResponse;
+import io.vertx.reactivex.ext.web.FileUpload;
+import io.vertx.reactivex.ext.web.Router;
+import io.vertx.reactivex.ext.web.RoutingContext;
+import io.vertx.reactivex.ext.web.handler.BodyHandler;
+import io.vertx.reactivex.ext.web.handler.StaticHandler;
+import kroca.youcast.db.reactivex.MediaDbService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +30,17 @@ import static kroca.youcast.util.EBPaths.DB_MEDIA;
 public class HttpApiVerticle extends AbstractVerticle {
     private Logger logger = LoggerFactory.getLogger(HttpApiVerticle.class);
     private MediaDbService mediaDbService;
-    private RadioStreaming streaming;
 
     @Override
     public void start(Promise<Void> startPromise) {
         JsonObject config = buildConfig();
         Router router = Router.router(vertx);
-        this.mediaDbService = MediaDbService.createProxy(vertx, DB_MEDIA);
-        streaming = new RadioStreaming(vertx);
-        router.route().handler(BodyHandler.create()
-                .setUploadsDirectory(config.getString("fileUploadsDirectory"))
-        );
+        this.mediaDbService = kroca.youcast.db.MediaDbService.createProxy(vertx.getDelegate(), DB_MEDIA);
+        RadioStreaming streaming = new RadioStreaming(vertx);
+        router.route()
+                .handler(BodyHandler.create()
+                        .setUploadsDirectory(config.getString("fileUploadsDirectory"))
+                );
 
         router.get("/*").handler(StaticHandler.create().setCachingEnabled(false));
         router.get("/").handler(context -> context.reroute("/index.html"));
@@ -60,6 +61,7 @@ public class HttpApiVerticle extends AbstractVerticle {
 
     private void downloadMedia(RoutingContext context) {
         Long fileId = Long.valueOf(context.request().getParam("id"));
+
         mediaDbService.findOne(fileId, res -> {
             if (res.succeeded()) {
                 JsonObject result = res.result();
@@ -97,27 +99,27 @@ public class HttpApiVerticle extends AbstractVerticle {
     }
 
     private void uploadMedia(RoutingContext context) {
-        List<Future> savedFiles = new ArrayList<>();
+        List<Single<Long>> savedFiles = new ArrayList<>();
         for (FileUpload fileUpload : context.fileUploads()) {
             if (fileUpload.contentType().startsWith("audio/")) {
-                savedFiles.add(Future.<Long>future(promise ->
-                        mediaDbService.save(fileUpload.fileName(), fileUpload.uploadedFileName(), promise)));
+                savedFiles.add(mediaDbService.rxSave(fileUpload.fileName(), fileUpload.uploadedFileName()));
             } else {
                 context.fail(400);
                 return;
             }
         }
-        CompositeFuture.all(savedFiles).setHandler(ar -> {
-            if (ar.succeeded()) {
-                context.response().setStatusCode(303);
-                context.response().putHeader("Location", "/index.html");
-                context.response().end();
-            } else {
-                logger.error("Could't save any data");
-                context.fail(500);
+        Single.zip(savedFiles, (Object[] args) -> {
+            for (Object obj : args) {
+                Long val = (Long) obj;
+                System.out.println(val);
             }
-        });
-
+            return true;
+        }).subscribe(
+                res -> context.response().putHeader("Location", "/index.html").setStatusCode(303).end(),
+                t -> {
+                    logger.error(t.getMessage());
+                    context.fail(t);
+                });
     }
 
     private void loadAllMedia(RoutingContext context) {

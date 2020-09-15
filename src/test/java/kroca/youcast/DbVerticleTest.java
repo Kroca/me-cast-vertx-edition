@@ -7,7 +7,8 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import kroca.youcast.db.DbVerticle;
-import kroca.youcast.db.MediaDbService;
+
+import kroca.youcast.db.reactivex.MediaDbService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class DbVerticleTest {
                 .put("max_pool_size", 5);
 
         vertx.deployVerticle(new DbVerticle(), new DeploymentOptions().setConfig(dbConfig), context.asyncAssertSuccess());
-        mediaDbService = MediaDbService.createProxy(vertx, DB_MEDIA);
+        mediaDbService = kroca.youcast.db.MediaDbService.createProxy(vertx, DB_MEDIA);
     }
 
     @After
@@ -72,6 +73,5 @@ public class DbVerticleTest {
                 async.complete();
             });
         });
-
     }
 }

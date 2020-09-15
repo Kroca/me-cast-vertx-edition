@@ -1,9 +1,11 @@
 package kroca.youcast.db;
 
-import io.vertx.core.AbstractVerticle;
+
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.jdbc.JDBCClient;
+import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.ext.jdbc.JDBCClient;
+
 import io.vertx.serviceproxy.ServiceBinder;
 import kroca.youcast.util.EBPaths;
 import org.slf4j.Logger;
@@ -25,7 +27,7 @@ public class DbVerticle extends AbstractVerticle {
                 logger.error(res.cause().getMessage());
                 promise.fail(res.cause());
             } else {
-                ServiceBinder binder = new ServiceBinder(vertx);
+                ServiceBinder binder = new ServiceBinder(vertx.getDelegate());
                 binder.setAddress(EBPaths.DB_MEDIA)
                         .register(MediaDbService.class, res.result());
                 promise.complete();

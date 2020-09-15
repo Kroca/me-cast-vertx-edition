@@ -9,7 +9,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.jdbc.JDBCClient;
+import io.vertx.reactivex.ext.jdbc.JDBCClient;
 
 
 @ProxyGen
@@ -34,7 +34,7 @@ public interface MediaDbService {
     }
 
     @GenIgnore
-    static MediaDbService createProxy(Vertx vertx, String address) {
-        return new MediaDbServiceVertxEBProxy(vertx, address);
+    static kroca.youcast.db.reactivex.MediaDbService createProxy(Vertx vertx, String address) {
+        return new kroca.youcast.db.reactivex.MediaDbService(new MediaDbServiceVertxEBProxy(vertx, address));
     }
 }
